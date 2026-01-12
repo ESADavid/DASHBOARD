@@ -1,0 +1,1 @@
+- [x] Update dashboard.json to replace infrastructure panels with banking panels (Total Assets, Transaction Volume, Debit/Credit Ratio, Ledger Balance, Payroll Expenses)

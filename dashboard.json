@@ -1,0 +1,287 @@
+{
+  "dashboard": {
+    "title": "Banking Dashboard",
+    "panels": [
+      {
+        "title": "Total Assets",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "banking_assets_total",
+            "refId": "A",
+            "instant": true
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "value": null,
+                  "color": "red"
+                },
+                {
+                  "value": 1000000,
+                  "color": "green"
+                }
+              ]
+            }
+          }
+        },
+        "alert": {
+          "conditions": [
+            {
+              "evaluator": {
+                "params": [1000000],
+                "type": "lt"
+              },
+              "operator": {
+                "type": "and"
+              },
+              "query": {
+                "params": ["A", "5m", "now"]
+              },
+              "reducer": {
+                "params": [],
+                "type": "last"
+              },
+              "type": "query"
+            }
+          ],
+          "executionErrorState": "alerting",
+          "for": "5m",
+          "frequency": "1m",
+          "handler": 1,
+          "name": "Low Assets Alert",
+          "noDataState": "no_value",
+          "notifications": []
+        }
+      },
+      {
+        "title": "Transaction Volume",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "banking_transaction_volume",
+            "refId": "A",
+            "instant": true
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "value": null,
+                  "color": "green"
+                },
+                {
+                  "value": 10000,
+                  "color": "red"
+                }
+              ]
+            }
+          }
+        },
+        "alert": {
+          "conditions": [
+            {
+              "evaluator": {
+                "params": [10000],
+                "type": "gt"
+              },
+              "operator": {
+                "type": "and"
+              },
+              "query": {
+                "params": ["A", "5m", "now"]
+              },
+              "reducer": {
+                "params": [],
+                "type": "last"
+              },
+              "type": "query"
+            }
+          ],
+          "executionErrorState": "alerting",
+          "for": "5m",
+          "frequency": "1m",
+          "handler": 1,
+          "name": "High Transaction Volume Alert",
+          "noDataState": "no_value",
+          "notifications": []
+        }
+      },
+      {
+        "title": "Debit/Credit Ratio",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "banking_debit_credit_ratio",
+            "refId": "A",
+            "instant": true
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "value": null,
+                  "color": "green"
+                },
+                {
+                  "value": 1.5,
+                  "color": "red"
+                }
+              ]
+            }
+          }
+        },
+        "alert": {
+          "conditions": [
+            {
+              "evaluator": {
+                "params": [1.5],
+                "type": "gt"
+              },
+              "operator": {
+                "type": "and"
+              },
+              "query": {
+                "params": ["A", "5m", "now"]
+              },
+              "reducer": {
+                "params": [],
+                "type": "last"
+              },
+              "type": "query"
+            }
+          ],
+          "executionErrorState": "alerting",
+          "for": "5m",
+          "frequency": "1m",
+          "handler": 1,
+          "name": "High Debit/Credit Ratio Alert",
+          "noDataState": "no_value",
+          "notifications": []
+        }
+      },
+      {
+        "title": "Ledger Balance",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "banking_ledger_balance",
+            "refId": "A",
+            "instant": true
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "value": null,
+                  "color": "red"
+                },
+                {
+                  "value": 0,
+                  "color": "green"
+                }
+              ]
+            }
+          }
+        },
+        "alert": {
+          "conditions": [
+            {
+              "evaluator": {
+                "params": [0],
+                "type": "lt"
+              },
+              "operator": {
+                "type": "and"
+              },
+              "query": {
+                "params": ["A", "5m", "now"]
+              },
+              "reducer": {
+                "params": [],
+                "type": "last"
+              },
+              "type": "query"
+            }
+          ],
+          "executionErrorState": "alerting",
+          "for": "5m",
+          "frequency": "1m",
+          "handler": 1,
+          "name": "Negative Ledger Balance Alert",
+          "noDataState": "no_value",
+          "notifications": []
+        }
+      },
+      {
+        "title": "Payroll Expenses",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "banking_payroll_total",
+            "refId": "A",
+            "instant": true
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "value": null,
+                  "color": "green"
+                },
+                {
+                  "value": 50000,
+                  "color": "red"
+                }
+              ]
+            }
+          }
+        },
+        "alert": {
+          "conditions": [
+            {
+              "evaluator": {
+                "params": [50000],
+                "type": "gt"
+              },
+              "operator": {
+                "type": "and"
+              },
+              "query": {
+                "params": ["A", "5m", "now"]
+              },
+              "reducer": {
+                "params": [],
+                "type": "last"
+              },
+              "type": "query"
+            }
+          ],
+          "executionErrorState": "alerting",
+          "for": "5m",
+          "frequency": "1m",
+          "handler": 1,
+          "name": "High Payroll Expenses Alert",
+          "noDataState": "no_value",
+          "notifications": []
+        }
+      }
+    ]
+  }
+}
