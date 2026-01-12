@@ -1,15 +1,14 @@
 {
   "dashboard": {
-    "title": "Banking Dashboard",
+    "title": "User Activity Dashboard",
     "panels": [
       {
-        "title": "Total Assets",
+        "title": "Daily Active Users (DAU)",
         "type": "stat",
         "targets": [
           {
-            "expr": "banking_assets_total",
-            "refId": "A",
-            "instant": true
+            "expr": "count(count_over_time(user_action_total[24h]))",
+            "refId": "C"
           }
         ],
         "fieldConfig": {
@@ -22,64 +21,12 @@
                   "color": "red"
                 },
                 {
-                  "value": 1000000,
-                  "color": "green"
-                }
-              ]
-            }
-          }
-        },
-        "alert": {
-          "conditions": [
-            {
-              "evaluator": {
-                "params": [1000000],
-                "type": "lt"
-              },
-              "operator": {
-                "type": "and"
-              },
-              "query": {
-                "params": ["A", "5m", "now"]
-              },
-              "reducer": {
-                "params": [],
-                "type": "last"
-              },
-              "type": "query"
-            }
-          ],
-          "executionErrorState": "alerting",
-          "for": "5m",
-          "frequency": "1m",
-          "handler": 1,
-          "name": "Low Assets Alert",
-          "noDataState": "no_value",
-          "notifications": []
-        }
-      },
-      {
-        "title": "Transaction Volume",
-        "type": "stat",
-        "targets": [
-          {
-            "expr": "banking_transaction_volume",
-            "refId": "A",
-            "instant": true
-          }
-        ],
-        "fieldConfig": {
-          "defaults": {
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "value": null,
-                  "color": "green"
+                  "value": 5000,
+                  "color": "yellow"
                 },
                 {
                   "value": 10000,
-                  "color": "red"
+                  "color": "green"
                 }
               ]
             }
@@ -89,14 +36,14 @@
           "conditions": [
             {
               "evaluator": {
-                "params": [10000],
-                "type": "gt"
+                "params": [],
+                "type": "lt"
               },
               "operator": {
                 "type": "and"
               },
               "query": {
-                "params": ["A", "5m", "now"]
+                "params": ["C", "5m", "now"]
               },
               "reducer": {
                 "params": [],
@@ -109,19 +56,18 @@
           "for": "5m",
           "frequency": "1m",
           "handler": 1,
-          "name": "High Transaction Volume Alert",
+          "name": "DAU Drop Alert",
           "noDataState": "no_value",
           "notifications": []
         }
       },
       {
-        "title": "Debit/Credit Ratio",
+        "title": "Weekly Active Users (WAU)",
         "type": "stat",
         "targets": [
           {
-            "expr": "banking_debit_credit_ratio",
-            "refId": "A",
-            "instant": true
+            "expr": "count(count_over_time(user_action_total[7d]))",
+            "refId": "D"
           }
         ],
         "fieldConfig": {
@@ -132,50 +78,18 @@
                 {
                   "value": null,
                   "color": "green"
-                },
-                {
-                  "value": 1.5,
-                  "color": "red"
                 }
               ]
             }
           }
-        },
-        "alert": {
-          "conditions": [
-            {
-              "evaluator": {
-                "params": [1.5],
-                "type": "gt"
-              },
-              "operator": {
-                "type": "and"
-              },
-              "query": {
-                "params": ["A", "5m", "now"]
-              },
-              "reducer": {
-                "params": [],
-                "type": "last"
-              },
-              "type": "query"
-            }
-          ],
-          "executionErrorState": "alerting",
-          "for": "5m",
-          "frequency": "1m",
-          "handler": 1,
-          "name": "High Debit/Credit Ratio Alert",
-          "noDataState": "no_value",
-          "notifications": []
         }
       },
       {
-        "title": "Ledger Balance",
-        "type": "stat",
+        "title": "DAU/WAU Stickiness Ratio",
+        "type": "gauge",
         "targets": [
           {
-            "expr": "banking_ledger_balance",
+            "expr": "SELECT\n  COUNT(DISTINCT CASE WHEN timestamp >= NOW() - INTERVAL '1 day' THEN user_id END)::float\n  /\n  COUNT(DISTINCT CASE WHEN timestamp >= NOW() - INTERVAL '7 days' THEN user_id END)\nAS dau_wau_ratio\nFROM events;",
             "refId": "A",
             "instant": true
           }
@@ -190,7 +104,11 @@
                   "color": "red"
                 },
                 {
-                  "value": 0,
+                  "value": 0.3,
+                  "color": "yellow"
+                },
+                {
+                  "value": 0.5,
                   "color": "green"
                 }
               ]
@@ -201,7 +119,7 @@
           "conditions": [
             {
               "evaluator": {
-                "params": [0],
+                "params": [0.25],
                 "type": "lt"
               },
               "operator": {
@@ -221,19 +139,18 @@
           "for": "5m",
           "frequency": "1m",
           "handler": 1,
-          "name": "Negative Ledger Balance Alert",
+          "name": "Low Stickiness Alert",
           "noDataState": "no_value",
           "notifications": []
         }
       },
       {
-        "title": "Payroll Expenses",
+        "title": "User Actions",
         "type": "stat",
         "targets": [
           {
-            "expr": "banking_payroll_total",
-            "refId": "A",
-            "instant": true
+            "expr": "count(count_over_time(user_action_total[24h])) / count(count_over_time(user_action_total[7d]))",
+            "refId": "B"
           }
         ],
         "fieldConfig": {
@@ -244,42 +161,35 @@
                 {
                   "value": null,
                   "color": "green"
-                },
-                {
-                  "value": 50000,
-                  "color": "red"
                 }
               ]
             }
           }
-        },
-        "alert": {
-          "conditions": [
-            {
-              "evaluator": {
-                "params": [50000],
-                "type": "gt"
-              },
-              "operator": {
-                "type": "and"
-              },
-              "query": {
-                "params": ["A", "5m", "now"]
-              },
-              "reducer": {
-                "params": [],
-                "type": "last"
-              },
-              "type": "query"
+        }
+      },
+      {
+        "title": "Trendline: Active Users Over Time",
+        "type": "timeseries",
+        "targets": [
+          {
+            "expr": "count(count_over_time(user_action_total[24h]))",
+            "refId": "E",
+            "legendFormat": "DAU"
+          },
+          {
+            "expr": "count(count_over_time(user_action_total[7d]))",
+            "refId": "F",
+            "legendFormat": "WAU"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "line": {
+                "width": 2
+              }
             }
-          ],
-          "executionErrorState": "alerting",
-          "for": "5m",
-          "frequency": "1m",
-          "handler": 1,
-          "name": "High Payroll Expenses Alert",
-          "noDataState": "no_value",
-          "notifications": []
+          }
         }
       }
     ]

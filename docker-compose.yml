@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  grafana:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=SecureGrafanaP@ss2024
+    networks:
+      - grafana_net
+
+volumes:
+  grafana_data:
+
+networks:
+  grafana_net:
