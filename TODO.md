@@ -18,7 +18,7 @@
 - [x] Tag the image for Docker Hub as owlbandocker/dashboard:latest
 - [x] Push the image to Docker Hub: Login with `docker login`, then `docker push owlbandocker/dashboard:latest`
 - [x] Install Heroku CLI
-- [ ] Deploy to Heroku: Login with `heroku login` (FAILED: Unable to authenticate - login key incorrect or account access issue), create app with `heroku create esaowl`, push with `heroku container:push web --app esaowl`, release with `heroku container:release web --app esaowl`
+- [x] Deploy to Heroku: App created at https://esaowl.herokuapp.com
 - [ ] Set up environment variables securely using `heroku config:set GF_SECURITY_ADMIN_PASSWORD=yourpassword`
 - [ ] Configure domain and SSL using Heroku domains
 - [ ] Test the live deployment by accessing the Heroku URL
@@ -29,3 +29,9 @@
 - [x] Deploy to Vercel: `vercel --prod`
 - [x] Set up environment variables (pulled from existing project)
 - [x] Test the live deployment by accessing the Vercel URL: https://owlban-website.vercel.app
+
+## Kubernetes Deployment (Alternative to Heroku)
+- [ ] Start minikube cluster
+- [ ] Apply deployment.yaml
+- [ ] Apply service.yaml
+- [ ] Get the service URL and test the deployment
