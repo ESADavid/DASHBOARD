@@ -6,8 +6,45 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-push-docker:
+  # Validate which secrets are configured
+  check-secrets:
     runs-on: ubuntu-latest
+    outputs:
+      has-docker: ${{ steps.check.outputs.has-docker }}
+      has-render: ${{ steps.check.outputs.has-render }}
+      has-fly: ${{ steps.check.outputs.has-fly }}
+      has-railway: ${{ steps.check.outputs.has-railway }}
+      has-heroku: ${{ steps.check.outputs.has-heroku }}
+      has-digitalocean: ${{ steps.check.outputs.has-digitalocean }}
+      has-kubernetes: ${{ steps.check.outputs.has-kubernetes }}
+    steps:
+      - name: Check configured secrets
+        id: check
+        run: |
+          echo "has-docker=${{ secrets.DOCKER_USERNAME != '' && secrets.DOCKER_PASSWORD != '' }}" >> $GITHUB_OUTPUT
+          echo "has-render=${{ secrets.RENDER_API_KEY != '' && secrets.RENDER_SERVICE_ID != '' }}" >> $GITHUB_OUTPUT
+          echo "has-fly=${{ secrets.FLY_API_TOKEN != '' }}" >> $GITHUB_OUTPUT
+          echo "has-railway=${{ secrets.RAILWAY_TOKEN != '' }}" >> $GITHUB_OUTPUT
+          echo "has-heroku=${{ secrets.HEROKU_API_KEY != '' && secrets.HEROKU_APP_NAME != '' && secrets.HEROKU_EMAIL != '' }}" >> $GITHUB_OUTPUT
+          echo "has-digitalocean=${{ secrets.DIGITALOCEAN_ACCESS_TOKEN != '' && secrets.DO_APP_ID != '' }}" >> $GITHUB_OUTPUT
+          echo "has-kubernetes=${{ secrets.KUBE_CONFIG != '' }}" >> $GITHUB_OUTPUT
+
+      - name: Display deployment targets
+        run: |
+          echo "🔍 Checking configured deployment targets..."
+          echo "Docker Hub: ${{ steps.check.outputs.has-docker }}"
+          echo "Render: ${{ steps.check.outputs.has-render }}"
+          echo "Fly.io: ${{ steps.check.outputs.has-fly }}"
+          echo "Railway: ${{ steps.check.outputs.has-railway }}"
+          echo "Heroku: ${{ steps.check.outputs.has-heroku }}"
+          echo "DigitalOcean: ${{ steps.check.outputs.has-digitalocean }}"
+          echo "Kubernetes: ${{ steps.check.outputs.has-kubernetes }}"
+
+  build-and-push-docker:
+    needs: check-secrets
+    runs-on: ubuntu-latest
+    # Only run if Docker Hub credentials are configured
+    if: needs.check-secrets.outputs.has-docker == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -33,8 +70,11 @@ jobs:
           cache-to: type=inline
 
   deploy-render:
-    needs: build-and-push-docker
+    needs: [check-secrets, build-and-push-docker]
     runs-on: ubuntu-latest
+    # Only run if Render secrets are configured
+    if: needs.check-secrets.outputs.has-render == 'true'
+    continue-on-error: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -43,13 +83,18 @@ jobs:
         env:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
         run: |
+          echo "🚀 Deploying to Render..."
           curl -X POST "https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys" \
             -H "Authorization: Bearer $RENDER_API_KEY" \
             -H "Content-Type: application/json"
+          echo "✅ Render deployment triggered"
 
   deploy-fly:
-    needs: build-and-push-docker
+    needs: [check-secrets, build-and-push-docker]
     runs-on: ubuntu-latest
+    # Only run if Fly.io token is configured
+    if: needs.check-secrets.outputs.has-fly == 'true'
+    continue-on-error: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -58,26 +103,41 @@ jobs:
         uses: superfly/flyctl-actions/setup-flyctl@master
 
       - name: Deploy to Fly.io
-        run: flyctl deploy --remote-only
+        run: |
+          echo "🚀 Deploying to Fly.io..."
+          flyctl deploy --remote-only
+          echo "✅ Fly.io deployment completed"
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
   deploy-railway:
-    needs: build-and-push-docker
+    needs: [check-secrets, build-and-push-docker]
     runs-on: ubuntu-latest
+    # Only run if Railway token is configured
+    if: needs.check-secrets.outputs.has-railway == 'true'
+    continue-on-error: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Install Railway CLI
+        run: |
+          npm install -g @railway/cli
+
       - name: Deploy to Railway
-        uses: bervProject/railway-deploy@main
-        with:
-          railway_token: ${{ secrets.RAILWAY_TOKEN }}
-          service: grafana-banking-dashboard
+        run: |
+          echo "🚀 Deploying to Railway..."
+          railway up --service dashboard || railway up
+          echo "✅ Railway deployment completed"
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
   deploy-heroku:
-    needs: build-and-push-docker
+    needs: [check-secrets, build-and-push-docker]
     runs-on: ubuntu-latest
+    # Only run if Heroku secrets are configured
+    if: needs.check-secrets.outputs.has-heroku == 'true'
+    continue-on-error: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -91,8 +151,11 @@ jobs:
           usedocker: true
 
   deploy-digitalocean:
-    needs: build-and-push-docker
+    needs: [check-secrets, build-and-push-docker]
     runs-on: ubuntu-latest
+    # Only run if DigitalOcean secrets are configured
+    if: needs.check-secrets.outputs.has-digitalocean == 'true'
+    continue-on-error: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -104,11 +167,16 @@ jobs:
 
       - name: Deploy to DigitalOcean App Platform
         run: |
+          echo "🚀 Deploying to DigitalOcean..."
           doctl apps create-deployment ${{ secrets.DO_APP_ID }}
+          echo "✅ DigitalOcean deployment triggered"
 
   deploy-kubernetes:
-    needs: build-and-push-docker
+    needs: [check-secrets, build-and-push-docker]
     runs-on: ubuntu-latest
+    # Only run if Kubernetes config is available
+    if: needs.check-secrets.outputs.has-kubernetes == 'true'
+    continue-on-error: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -123,24 +191,42 @@ jobs:
 
       - name: Update Kubernetes deployment
         run: |
+          echo "🚀 Deploying to Kubernetes..."
           kubectl set image deployment/grafana-dashboard grafana=owlbandocker/dashboard:${{ github.sha }}
           kubectl rollout status deployment/grafana-dashboard
+          echo "✅ Kubernetes deployment completed"
 
-  notify-success:
-    needs: [deploy-render, deploy-fly, deploy-railway, deploy-heroku, deploy-digitalocean, deploy-kubernetes]
+  deployment-summary:
+    needs: [check-secrets, build-and-push-docker, deploy-render, deploy-fly, deploy-railway, deploy-heroku, deploy-digitalocean, deploy-kubernetes]
     runs-on: ubuntu-latest
-    if: success()
+    if: always()
     steps:
-      - name: Send success notification
+      - name: Generate deployment summary
         run: |
-          echo "✅ All deployments completed successfully!"
-          echo "Dashboard is now live on multiple platforms"
-
-  notify-failure:
-    needs: [deploy-render, deploy-fly, deploy-railway, deploy-heroku, deploy-digitalocean, deploy-kubernetes]
-    runs-on: ubuntu-latest
-    if: failure()
-    steps:
-      - name: Send failure notification
-        run: |
-          echo "❌ Some deployments failed. Check the logs for details."
+          echo "# 📊 Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Configured Platforms:" >> $GITHUB_STEP_SUMMARY
+          echo "- Docker Hub: ${{ needs.check-secrets.outputs.has-docker }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Render: ${{ needs.check-secrets.outputs.has-render }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Fly.io: ${{ needs.check-secrets.outputs.has-fly }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Railway: ${{ needs.check-secrets.outputs.has-railway }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Heroku: ${{ needs.check-secrets.outputs.has-heroku }}" >> $GITHUB_STEP_SUMMARY
+          echo "- DigitalOcean: ${{ needs.check-secrets.outputs.has-digitalocean }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Kubernetes: ${{ needs.check-secrets.outputs.has-kubernetes }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Deployment Results:" >> $GITHUB_STEP_SUMMARY
+          echo "- Build Docker: ${{ needs.build-and-push-docker.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Render: ${{ needs.deploy-render.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Fly.io: ${{ needs.deploy-fly.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Railway: ${{ needs.deploy-railway.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Heroku: ${{ needs.deploy-heroku.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- DigitalOcean: ${{ needs.deploy-digitalocean.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Kubernetes: ${{ needs.deploy-kubernetes.result }}" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ needs.build-and-push-docker.result }}" == "success" ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "✅ Deployment workflow completed!" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "⚠️ Some deployments were skipped or failed. Check individual job logs for details." >> $GITHUB_STEP_SUMMARY
+          fi

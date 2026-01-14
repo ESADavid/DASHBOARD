@@ -1,0 +1,93 @@
+name: Deploy Banking Dashboard
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-docker:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: |
+            owlbandocker/dashboard:latest
+            owlbandocker/dashboard:${{ github.sha }}
+          cache-from: type=registry,ref=owlbandocker/dashboard:latest
+          cache-to: type=inline
+
+  deploy-render:
+    name: Deploy to Render.com
+    needs: build-docker
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Trigger Render Deployment
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+          RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
+        run: |
+          if [ -n "$RENDER_API_KEY" ] && [ -n "$RENDER_SERVICE_ID" ]; then
+            curl -X POST "https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys" \
+              -H "Authorization: Bearer $RENDER_API_KEY" \
+              -H "Content-Type: application/json"
+            echo "✅ Render deployment triggered"
+          else
+            echo "⚠️ Render secrets not configured, skipping"
+          fi
+
+  deploy-fly:
+    name: Deploy to Fly.io
+    needs: build-docker
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Fly.io CLI
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy to Fly.io
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: |
+          if [ -n "$FLY_API_TOKEN" ]; then
+            flyctl deploy --remote-only
+            echo "✅ Fly.io deployment successful"
+          else
+            echo "⚠️ Fly.io token not configured, skipping"
+          fi
+
+  notify:
+    name: Deployment Summary
+    needs: [build-docker, deploy-render, deploy-fly]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+      - name: Display deployment status
+        run: |
+          echo "=== Deployment Summary ==="
+          echo "Docker Build: ${{ needs.build-docker.result }}"
+          echo "Render Deploy: ${{ needs.deploy-render.result }}"
+          echo "Fly.io Deploy: ${{ needs.deploy-fly.result }}"
+          echo "=========================="

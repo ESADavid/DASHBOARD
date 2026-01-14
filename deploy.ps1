@@ -22,7 +22,7 @@ function Test-Command {
 }
 
 # Function to deploy to Render
-function Deploy-Render {
+function Invoke-RenderDeployment {
     Write-Host "📦 Deploying to Render.com..." -ForegroundColor Green
     Write-Host "Please follow these steps:" -ForegroundColor Yellow
     Write-Host "1. Go to https://render.com" -ForegroundColor White
@@ -36,12 +36,12 @@ function Deploy-Render {
 }
 
 # Function to deploy to Fly.io
-function Deploy-Fly {
+function Invoke-FlyDeployment {
     Write-Host "📦 Deploying to Fly.io..." -ForegroundColor Green
     
     if (-not (Test-Command flyctl)) {
         Write-Host "Installing Fly CLI..." -ForegroundColor Yellow
-        iwr https://fly.io/install.ps1 -useb | iex
+        Invoke-WebRequest https://fly.io/install.ps1 -UseBasicParsing | Invoke-Expression
         Write-Host "✅ Fly CLI installed" -ForegroundColor Green
     }
     
@@ -56,7 +56,7 @@ function Deploy-Fly {
 }
 
 # Function to deploy to Railway
-function Deploy-Railway {
+function Invoke-RailwayDeployment {
     Write-Host "📦 Deploying to Railway.app..." -ForegroundColor Green
     
     if (-not (Test-Command railway)) {
@@ -81,7 +81,7 @@ function Deploy-Railway {
 }
 
 # Function to build and push Docker image
-function Deploy-Docker {
+function Invoke-DockerDeployment {
     Write-Host "📦 Building and pushing Docker image..." -ForegroundColor Green
     
     if (-not (Test-Command docker)) {
@@ -104,7 +104,7 @@ function Deploy-Docker {
 }
 
 # Function to deploy to Heroku
-function Deploy-Heroku {
+function Invoke-HerokuDeployment {
     Write-Host "📦 Deploying to Heroku..." -ForegroundColor Green
     
     if (-not (Test-Command heroku)) {
@@ -163,18 +163,18 @@ Write-Host "Selected Platform: $Platform" -ForegroundColor Cyan
 Write-Host ""
 
 switch ($Platform) {
-    'render' { Deploy-Render }
-    'fly' { Deploy-Fly }
-    'railway' { Deploy-Railway }
-    'docker' { Deploy-Docker }
-    'heroku' { Deploy-Heroku }
+    'render' { Invoke-RenderDeployment }
+    'fly' { Invoke-FlyDeployment }
+    'railway' { Invoke-RailwayDeployment }
+    'docker' { Invoke-DockerDeployment }
+    'heroku' { Invoke-HerokuDeployment }
     'all' {
         Write-Host "Deploying to all platforms..." -ForegroundColor Magenta
-        Deploy-Docker
-        Deploy-Render
-        Deploy-Fly
-        Deploy-Railway
-        Deploy-Heroku
+        Invoke-DockerDeployment
+        Invoke-RenderDeployment
+        Invoke-FlyDeployment
+        Invoke-RailwayDeployment
+        Invoke-HerokuDeployment
     }
 }
 
