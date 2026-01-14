@@ -30,6 +30,17 @@
 - [x] Set up environment variables (pulled from existing project)
 - [x] Test the live deployment by accessing the Vercel URL: https://owlban-website.vercel.app
 
+## GitHub Actions CI/CD Pipeline
+- [x] Create multi-platform deployment workflow (.github/workflows/deploy-multi-platform.yml)
+- [x] Add secret validation and conditional deployments
+- [x] Fix Railway deployment configuration
+- [x] Add error handling and deployment summary
+- [x] Create comprehensive secrets setup guide (GITHUB_SECRETS_SETUP.md)
+- [x] Review workflow for correctness
+- [ ] Configure GitHub secrets for desired platforms
+- [ ] Test workflow by pushing to main branch
+- [ ] Verify deployments succeed
+
 ## Kubernetes Deployment (Alternative to Heroku)
 - [ ] Start minikube cluster
 - [ ] Apply deployment.yaml
