@@ -61,10 +61,12 @@ DASHBOARD/
 ├── deployment.yaml                     # Kubernetes deployment
 ├── service.yaml                        # Kubernetes service
 ├── .github/workflows/
+│   ├── docker.yml                     # Docker build & push (NEW!)
 │   ├── deploy-simple.yml              # Simple CI/CD (recommended)
 │   └── deploy-multi-platform.yml      # Advanced CI/CD
 └── docs/
     ├── DEPLOYMENT_GUIDE.md            # Complete deployment guide
+    ├── DOCKER_WORKFLOW_GUIDE.md       # Docker workflow guide (NEW!)
     ├── QUICK_DEPLOY.md                # Quick start guide
     ├── README_DEPLOYMENT.md           # Full README
     ├── DEPLOYMENT_STATUS.md           # Current status
@@ -86,6 +88,7 @@ DASHBOARD/
 
 - **[QUICK_DEPLOY.md](QUICK_DEPLOY.md)** - Get started in 5 minutes
 - **[DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)** - Complete deployment guide
+- **[DOCKER_WORKFLOW_GUIDE.md](DOCKER_WORKFLOW_GUIDE.md)** - Docker CI/CD workflow (NEW!)
 - **[DEPLOYMENT_STATUS.md](DEPLOYMENT_STATUS.md)** - Current status & next steps
 - **[GITHUB_ACTIONS_SETUP.md](GITHUB_ACTIONS_SETUP.md)** - CI/CD setup
 
