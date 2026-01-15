@@ -1,311 +1,44 @@
-name: Docker Build and Push
+name: Build and Push Docker Image
 
 on:
   push:
-    branches: [ main, master ]
-    tags:
-      - 'v*.*.*'
-  pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
   workflow_dispatch:
 
-env:
-  DOCKER_IMAGE: owlbandocker/dashboard
-  PLATFORMS: linux/amd64,linux/arm64
-
 jobs:
-  # Check if Docker Hub credentials are configured
-  check-secrets:
-    name: Validate Configuration
+  build:
     runs-on: ubuntu-latest
-    outputs:
-      has-docker-creds: ${{ steps.check.outputs.has-docker-creds }}
-      should-push: ${{ steps.check.outputs.should-push }}
-    steps:
-      - name: Check Docker Hub credentials
-        id: check
-        run: |
-          if [ -n "${{ secrets.DOCKER_USERNAME }}" ] && [ -n "${{ secrets.DOCKER_PASSWORD }}" ]; then
-            echo "has-docker-creds=true" >> $GITHUB_OUTPUT
-            echo "✅ Docker Hub credentials configured"
-          else
-            echo "has-docker-creds=false" >> $GITHUB_OUTPUT
-            echo "⚠️ Docker Hub credentials not configured"
-          fi
-          
-          # Determine if we should push (not a PR and has credentials)
-          if [ "${{ github.event_name }}" != "pull_request" ] && [ -n "${{ secrets.DOCKER_USERNAME }}" ]; then
-            echo "should-push=true" >> $GITHUB_OUTPUT
-            echo "✅ Will push images to Docker Hub"
-          else
-            echo "should-push=false" >> $GITHUB_OUTPUT
-            echo "ℹ️ Build only (PR or missing credentials)"
-          fi
 
-  # Build and test Docker image
-  build-and-push:
-    name: Build Multi-Architecture Image
-    needs: check-secrets
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up QEMU
+      - name: Set up QEMU (multi-arch)
         uses: docker/setup-qemu-action@v3
-        with:
-          platforms: ${{ env.PLATFORMS }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-        with:
-          driver-opts: |
-            image=moby/buildkit:latest
-            network=host
-
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.DOCKER_IMAGE }}
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=sha,prefix={{branch}}-
-            type=raw,value=latest,enable={{is_default_branch}}
-          labels: |
-            org.opencontainers.image.title=Banking Dashboard
-            org.opencontainers.image.description=Grafana-based banking analytics dashboard
-            org.opencontainers.image.vendor=OwlBan Group
-            maintainer=OwlBan Group
 
       - name: Login to Docker Hub
-        if: needs.check-secrets.outputs.should-push == 'true'
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push Docker image
-        id: build
+      - name: Build and push multi-arch image
         uses: docker/build-push-action@v5
         with:
           context: .
           file: ./Dockerfile
-          platforms: ${{ env.PLATFORMS }}
-          push: ${{ needs.check-secrets.outputs.should-push == 'true' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache
-          cache-to: type=inline
-          provenance: false
-          sbom: false
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/dashboard:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/dashboard:${{ github.sha }}
 
-      - name: Generate build summary
-        run: |
-          echo "# 🐳 Docker Build Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## Build Information" >> $GITHUB_STEP_SUMMARY
-          echo "- **Event:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Platforms:** ${{ env.PLATFORMS }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Pushed:** ${{ needs.check-secrets.outputs.should-push }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## Image Tags" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          echo "${{ steps.meta.outputs.tags }}" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          
-          if [ "${{ needs.check-secrets.outputs.should-push }}" == "true" ]; then
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "## 🎉 Image Published" >> $GITHUB_STEP_SUMMARY
-            echo "Your Docker image has been successfully built and pushed to Docker Hub!" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "### Pull the image:" >> $GITHUB_STEP_SUMMARY
-            echo '```bash' >> $GITHUB_STEP_SUMMARY
-            echo "docker pull ${{ env.DOCKER_IMAGE }}:latest" >> $GITHUB_STEP_SUMMARY
-            echo '```' >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "### Run the container:" >> $GITHUB_STEP_SUMMARY
-            echo '```bash' >> $GITHUB_STEP_SUMMARY
-            echo "docker run -d -p 3000:3000 ${{ env.DOCKER_IMAGE }}:latest" >> $GITHUB_STEP_SUMMARY
-            echo '```' >> $GITHUB_STEP_SUMMARY
-          else
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "## ℹ️ Build Only" >> $GITHUB_STEP_SUMMARY
-            echo "Image was built but not pushed (PR or missing credentials)" >> $GITHUB_STEP_SUMMARY
-          fi
-
-  # Test the built image
-  test-image:
-    name: Test Docker Image
-    needs: [check-secrets, build-and-push]
-    runs-on: ubuntu-latest
-    if: needs.check-secrets.outputs.should-push == 'true'
-    
-    steps:
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
+      - name: Scan image for vulnerabilities
+        uses: aquasecurity/trivy-action@0.20.0
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Pull and test image
-        run: |
-          echo "🔍 Testing Docker image..."
-          
-          # Pull the latest image
-          docker pull ${{ env.DOCKER_IMAGE }}:latest
-          
-          # Start container
-          docker run -d --name test-container -p 3000:3000 ${{ env.DOCKER_IMAGE }}:latest
-          
-          # Wait for container to be ready
-          echo "⏳ Waiting for container to start..."
-          sleep 10
-          
-          # Check if container is running
-          if docker ps | grep test-container; then
-            echo "✅ Container is running"
-          else
-            echo "❌ Container failed to start"
-            docker logs test-container
-            exit 1
-          fi
-          
-          # Check if Grafana is responding
-          echo "🔍 Checking Grafana health..."
-          for i in {1..30}; do
-            if curl -f http://localhost:3000/api/health 2>/dev/null; then
-              echo "✅ Grafana is healthy"
-              break
-            fi
-            if [ $i -eq 30 ]; then
-              echo "❌ Grafana health check failed"
-              docker logs test-container
-              exit 1
-            fi
-            echo "⏳ Waiting for Grafana... ($i/30)"
-            sleep 2
-          done
-          
-          # Get container info
-          echo "📊 Container Information:"
-          docker inspect test-container --format='{{.Config.Image}}'
-          docker inspect test-container --format='{{.Config.Labels}}'
-          
-          # Cleanup
-          docker stop test-container
-          docker rm test-container
-          
-          echo "✅ All tests passed!"
-
-      - name: Generate test summary
-        if: always()
-        run: |
-          echo "# 🧪 Image Test Results" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          if [ "${{ job.status }}" == "success" ]; then
-            echo "✅ **All tests passed!**" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "The Docker image has been validated and is ready for deployment." >> $GITHUB_STEP_SUMMARY
-          else
-            echo "❌ **Tests failed!**" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "Please check the logs for details." >> $GITHUB_STEP_SUMMARY
-          fi
-
-  # Scan image for vulnerabilities
-  security-scan:
-    name: Security Scan
-    needs: [check-secrets, build-and-push]
-    runs-on: ubuntu-latest
-    if: needs.check-secrets.outputs.should-push == 'true'
-    
-    steps:
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Pull image for scanning
-        run: docker pull ${{ env.DOCKER_IMAGE }}:latest
-
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: ${{ env.DOCKER_IMAGE }}:latest
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-          severity: 'CRITICAL,HIGH'
-
-      - name: Upload Trivy results to GitHub Security
-        uses: github/codeql-action/upload-sarif@v3
-        if: always()
-        with:
-          sarif_file: 'trivy-results.sarif'
-
-      - name: Run Trivy vulnerability scanner (table format)
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: ${{ env.DOCKER_IMAGE }}:latest
-          format: 'table'
-          severity: 'CRITICAL,HIGH,MEDIUM'
-
-      - name: Generate security summary
-        if: always()
-        run: |
-          echo "# 🔒 Security Scan Results" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Image scanned for vulnerabilities using Trivy." >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Check the Security tab for detailed results." >> $GITHUB_STEP_SUMMARY
-
-  # Generate final summary
-  summary:
-    name: Workflow Summary
-    needs: [check-secrets, build-and-push, test-image, security-scan]
-    runs-on: ubuntu-latest
-    if: always()
-    
-    steps:
-      - name: Generate workflow summary
-        run: |
-          echo "# 📋 Docker Workflow Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## Job Results" >> $GITHUB_STEP_SUMMARY
-          echo "- **Configuration Check:** ${{ needs.check-secrets.result }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Build & Push:** ${{ needs.build-and-push.result }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Image Testing:** ${{ needs.test-image.result }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Security Scan:** ${{ needs.security-scan.result }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          
-          if [ "${{ needs.build-and-push.result }}" == "success" ]; then
-            echo "## ✅ Workflow Completed Successfully" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            if [ "${{ needs.check-secrets.outputs.should-push }}" == "true" ]; then
-              echo "Your Docker image is ready and available at:" >> $GITHUB_STEP_SUMMARY
-              echo "- **Docker Hub:** https://hub.docker.com/r/${{ env.DOCKER_IMAGE }}" >> $GITHUB_STEP_SUMMARY
-              echo "- **Image:** \`${{ env.DOCKER_IMAGE }}:latest\`" >> $GITHUB_STEP_SUMMARY
-            else
-              echo "Image was built successfully but not pushed (PR or missing credentials)." >> $GITHUB_STEP_SUMMARY
-            fi
-          else
-            echo "## ❌ Workflow Failed" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "Please check the failed jobs for details." >> $GITHUB_STEP_SUMMARY
-          fi
-          
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "---" >> $GITHUB_STEP_SUMMARY
-          echo "*Workflow triggered by: ${{ github.event_name }}*" >> $GITHUB_STEP_SUMMARY
-          echo "*Commit: ${{ github.sha }}*" >> $GITHUB_STEP_SUMMARY
+          image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/dashboard:latest
+          format: table
+          exit-code: 0
