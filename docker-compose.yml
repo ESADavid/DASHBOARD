@@ -1,48 +1,23 @@
 version: '3.8'
 
 services:
-  grafana:
+  cloud-platform:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: grafana-banking-dashboard
+    container_name: cloud-io-platform
     ports:
-      - "3000:3000"
-    environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin123
-      - GF_SERVER_ROOT_URL=http://localhost:3000
-      - GF_INSTALL_PLUGINS=
-    volumes:
-      - grafana-storage:/var/lib/grafana
-      - ./dashboard.json:/var/lib/grafana/dashboards/dashboard.json:ro
-      - ./dashboard.yml:/etc/grafana/provisioning/dashboards/dashboard.yml:ro
+      - "3000:80"
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
     networks:
-      - grafana-network
-
-  # Optional: Add a database for Grafana to store its data
-  postgres:
-    image: postgres:15-alpine
-    container_name: grafana-postgres
-    environment:
-      - POSTGRES_DB=grafana
-      - POSTGRES_USER=grafana
-      - POSTGRES_PASSWORD=grafana123
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    restart: unless-stopped
-    networks:
-      - grafana-network
-    profiles:
-      - with-db
-
-volumes:
-  grafana-storage:
-    driver: local
-  postgres-data:
-    driver: local
+      - cloud-network
 
 networks:
-  grafana-network:
+  cloud-network:
     driver: bridge

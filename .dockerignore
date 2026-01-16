@@ -1,0 +1,51 @@
+# Git
+.git
+.gitignore
+.github
+
+# Documentation
+*.md
+!CLOUD_PLATFORM_README.md
+docs/
+
+# Development files
+node_modules
+npm-debug.log
+.env
+.env.local
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Deployment configs (not needed in image)
+render.yaml
+fly.toml
+heroku.yml
+railway.json
+vercel.json
+.vercel
+
+# Old dashboard files
+dashboard.json
+dashboard.yml
+
+# Scripts
+*.ps1
+*.sh
+
+# Kubernetes
+deployment.yaml
+service.yaml
+
+# Testing
+test/
+tests/
+*.test.js
