@@ -60,14 +60,19 @@ docs/corporate/
 ### Entity Documentation
 
 #### OWLBAN GROUP HOLDINGS CORPORATION (Parent C Corp)
+- **[Overview](owlban-group-holdings/README.md)** - Complete entity information
+- **[Financial Records](owlban-group-holdings/FINANCIAL_RECORDS.md)** - Financial statements and capital accounts
 - Formation Documents: [articles-of-organization.pdf](articles-of-organization.pdf)
 - Entity Details: See [Entity Registry](ENTITY_REGISTRY.md)
-- Governance: See [Corporate Structure](CORPORATE_STRUCTURE.md)
+- **Financial Position (01/15/2025)**: $10,000,000.00 in assets - Fully capitalized
+- Status: Active - Parent holding company
 
 #### OWLBAN GROUP LEEPYEAR 1 LLC (Operational Entity)
 - **[Overview](leepyear-1-llc/README.md)** - Complete entity information
 - **[Operating Agreement](leepyear-1-llc/OPERATING_AGREEMENT.md)** - LLC governance document
+- **[Financial Records](leepyear-1-llc/FINANCIAL_RECORDS.md)** - Financial statements and capital accounts
 - Purpose: Primary operational entity for business activities
+- **Financial Position (01/15/2025)**: $10,000,000.00 in member capital - Fully capitalized
 - Status: Active - Revenue generating
 
 #### C Corporation Shell Companies
@@ -87,16 +92,23 @@ docs/corporate/
 
 ## 📊 Entity Summary
 
-| Entity Name | Type | Status | Primary Purpose |
-|-------------|------|--------|-----------------|
-| OWLBAN GROUP HOLDINGS CORP | C Corp | Active | Parent holding company |
-| LEEPYEAR 1 LLC | LLC | Active | Operational business entity |
-| Shell Company 1 | C Corp | Active | Asset protection |
-| Shell Company 2 | C Corp | Active | Investment vehicle |
-| Shell Company 3 | C Corp | Active | Risk isolation |
-| Revocable Living Trust | Trust | Active | Estate planning |
-| Irrevocable Trust | Trust | Active | Asset protection |
-| Business Asset Protection Trust | Trust | Active | Business succession |
+| Entity Name | Type | Status | Primary Purpose | Capital Position |
+|-------------|------|--------|-----------------|------------------|
+| OWLBAN GROUP HOLDINGS CORP | C Corp | Active | Parent holding company | $10,000,000.00 |
+| LEEPYEAR 1 LLC | LLC | Active | Operational business entity | $10,000,000.00 |
+| Shell Company 1 | C Corp | Active | Asset protection | TBD |
+| Shell Company 2 | C Corp | Active | Investment vehicle | TBD |
+| Shell Company 3 | C Corp | Active | Risk isolation | TBD |
+| Revocable Living Trust | Trust | Active | Estate planning | TBD |
+| Irrevocable Trust | Trust | Active | Asset protection | TBD |
+| Business Asset Protection Trust | Trust | Active | Business succession | TBD |
+
+### Recent Financial Activity (January 2025)
+- **Total Capital Deployed**: $20,000,000.00
+- **Holdings Corporation**: $10,000,000.00 capital injection
+- **LEEPYEAR 1 LLC**: $10,000,000.00 capital contribution
+- **Status**: Both entities fully capitalized and operational
+- **Details**: See [CAPITAL_INJECTION_SUMMARY.md](CAPITAL_INJECTION_SUMMARY.md)
 
 ---
 
@@ -347,10 +359,16 @@ Please notify the corporate secretary immediately of:
 
 ---
 
-**Document Version**: 2.0  
-**Last Updated**: January 2025  
+**Document Version**: 2.1  
+**Last Updated**: January 15, 2025  
 **Next Review Date**: January 2026  
 **Maintained By**: Corporate Secretary
+
+**Recent Updates**:
+- January 15, 2025: Added OWLBAN GROUP Holdings Corporation directory and documentation
+- January 15, 2025: Added financial records for Holdings Corp and LEEPYEAR 1 LLC
+- January 15, 2025: Documented $20M total capital injection across entities
+- January 15, 2025: Created CAPITAL_INJECTION_SUMMARY.md
 
 **Classification**: CONFIDENTIAL - RESTRICTED ACCESS
 

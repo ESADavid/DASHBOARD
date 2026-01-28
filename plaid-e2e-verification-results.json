@@ -1,0 +1,79 @@
+﻿{
+    "Passed":  0,
+    "Timestamp":  "2026-01-28 17:00:05",
+    "TotalTests":  14,
+    "Failed":  14,
+    "Tests":  [
+                  {
+                      "Status":  "FAIL",
+                      "Error":  "Unable to connect to the remote server",
+                      "Name":  "Server Health Check"
+                  },
+                  {
+                      "Status":  "FAIL",
+                      "Error":  "Unable to connect to the remote server",
+                      "Name":  "Create Link Token - Holdings Corp"
+                  },
+                  {
+                      "Status":  "FAIL",
+                      "Error":  "Unable to connect to the remote server",
+                      "Name":  "Create Link Token - LEEPYEAR 1 LLC"
+                  },
+                  {
+                      "Status":  "FAIL",
+                      "Error":  "Unable to connect to the remote server",
+                      "Name":  "Exchange Public Token - Holdings Corp"
+                  },
+                  {
+                      "Status":  "FAIL",
+                      "Error":  "Unable to connect to the remote server",
+                      "Name":  "Exchange Public Token - LEEPYEAR 1 LLC"
+                  },
+                  {
+                      "Status":  "FAIL",
+                      "Error":  "Unable to connect to the remote server",
+                      "Name":  "Get Accounts - Holdings Corp"
+                  },
+                  {
+                      "Status":  "FAIL",
+                      "Error":  "Unable to connect to the remote server",
+                      "Name":  "Get Balance - Holdings Corp"
+                  },
+                  {
+                      "Status":  "FAIL",
+                      "Error":  "Unable to connect to the remote server",
+                      "Name":  "Get Transactions - Holdings Corp"
+                  },
+                  {
+                      "Status":  "FAIL",
+                      "Error":  "Unable to connect to the remote server",
+                      "Name":  "Get Identity - Holdings Corp"
+                  },
+                  {
+                      "Status":  "FAIL",
+                      "Error":  "Unable to connect to the remote server",
+                      "Name":  "Get Auth Info - Holdings Corp"
+                  },
+                  {
+                      "Status":  "FAIL",
+                      "Error":  "Unable to connect to the remote server",
+                      "Name":  "Get Holdings - Holdings Corp"
+                  },
+                  {
+                      "Status":  "FAIL",
+                      "Error":  "Unable to connect to the remote server",
+                      "Name":  "Get Investment Transactions"
+                  },
+                  {
+                      "Status":  "FAIL",
+                      "Error":  "Unable to connect to the remote server",
+                      "Name":  "Get Item Info"
+                  },
+                  {
+                      "Status":  "FAIL",
+                      "Error":  "Unable to connect to the remote server",
+                      "Name":  "Get Assets Report"
+                  }
+              ],
+    "SuccessRate":  0
+}

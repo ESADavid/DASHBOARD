@@ -75,49 +75,73 @@ LEEPYEAR 1 LLC operates as the primary business entity for:
 
 ### Banking Relationships
 
-#### Primary Operating Account
-- **Bank**: [Bank Name]
+> **🔐 SECURITY NOTE**: Complete banking details including full account numbers and routing numbers are stored in the secure, git-ignored file: `BANKING_DETAILS.md`. Access is restricted to authorized personnel only.
+
+#### Primary Operating Account - Bank of America
+- **Bank**: Bank of America
 - **Account Type**: Business Checking
-- **Account Number**: [XXXX-XXXX-XXXX]
-- **Purpose**: Daily operations, revenue deposits
-- **Authorized Signers**: [Names]
+- **Account Number**: ****2660 (Full details in BANKING_DETAILS.md)
+- **Routing Number**: 053000196
+- **Purpose**: Primary daily operations, revenue deposits, payroll
+- **Status**: Active
+- **Authorized Signers**: Lativia Gibbs, David Leeper, Oscar Broome
 
-#### Payroll Account
-- **Bank**: [Bank Name]
+#### Secondary Operating Account - Fifth Third Bank
+- **Bank**: Fifth Third Bank
 - **Account Type**: Business Checking
-- **Account Number**: [XXXX-XXXX-XXXX]
-- **Purpose**: Employee payroll and benefits
-- **Authorized Signers**: [Names]
+- **Account Number**: ****1904 (Full details in BANKING_DETAILS.md)
+- **Routing Number**: 053100737
+- **Purpose**: Secondary operations, backup account, additional client deposits
+- **Status**: Active
+- **Authorized Signers**: Lativia Gibbs, David Leeper, Oscar Broome
 
-#### Reserve/Savings Account
-- **Bank**: [Bank Name]
-- **Account Type**: Business Savings
-- **Account Number**: [XXXX-XXXX-XXXX]
-- **Purpose**: Operating reserves, emergency fund
-- **Authorized Signers**: [Names]
+### Wire Transfer Information
+For incoming wire transfer instructions, please refer to `BANKING_DETAILS.md` or contact:
+- **David Leeper** (Financial Officer) - [Contact Info]
+- **Lativia Gibbs** (Managing Member) - [Contact Info]
 
-#### Merchant Services Account
-- **Provider**: [Payment Processor]
-- **Account Number**: [XXXX-XXXX]
-- **Purpose**: Credit card processing, online payments
-- **Monthly Volume**: $[Amount]
+### Account Access
+- **Full Banking Details**: See `BANKING_DETAILS.md` (Restricted Access)
+- **Online Banking**: Credentials managed via secure password manager
+- **Two-Factor Authentication**: Required for all accounts
+- **Security Review**: Quarterly
 
 ---
 
 ## 📊 Financial Overview
 
+### Current Financial Position (As of January 15, 2025)
+- **Total Assets**: $10,000,000.00
+- **Cash and Cash Equivalents**: $10,000,000.00
+- **Total Liabilities**: $0.00
+- **Member Capital Account**: $10,000,000.00
+- **Total Members' Equity**: $10,000,000.00
+- **Status**: Fully Capitalized
+
+### Capital Contributions
+- **Initial Contribution**: [Amount]
+- **Additional Contribution (01/15/2025)**: $10,000,000.00
+- **Total Capital Contributed**: $10,000,000.00
+- **Source**: OWLBAN GROUP HOLDINGS CORPORATION (Parent Company)
+
+### Capital Allocation Plan
+- **Working Capital** (30%): $3,000,000.00
+- **Business Development** (25%): $2,500,000.00
+- **Technology & Infrastructure** (15%): $1,500,000.00
+- **Strategic Investments** (15%): $1,500,000.00
+- **Operating Reserves** (15%): $1,500,000.00
+
 ### Annual Financial Metrics (Current Year)
 - **Projected Revenue**: $[Amount]
 - **Operating Expenses**: $[Amount]
 - **Net Income**: $[Amount]
-- **Assets**: $[Amount]
-- **Liabilities**: $[Amount]
-- **Member Equity**: $[Amount]
 
 ### Tax Classification
 - **Federal Tax Classification**: [Disregarded Entity / Partnership / Corporation]
 - **State Tax Classification**: [Classification]
-- **Tax Filing Requirement**: [Form 1065 / Other]
+- **Tax Filing Requirement**: Form 1065 (Partnership Return)
+
+> **📊 Detailed Financial Records**: See `FINANCIAL_RECORDS.md` for complete financial statements, capital account ledger, and detailed allocation plans.
 
 ---
 

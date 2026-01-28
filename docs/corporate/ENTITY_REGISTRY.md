@@ -39,6 +39,17 @@ This document serves as the central registry for all OWLBAN GROUP entities, incl
 - David Leeper - Director
 - Oscar Broome - Director
 
+**Financial Position (As of January 15, 2025):**
+- Total Assets: $10,000,000.00
+- Total Equity: $10,000,000.00
+- Cash and Cash Equivalents: $10,000,000.00
+- Status: Fully Capitalized
+
+**Documentation:**
+- Financial Records: `docs/corporate/owlban-group-holdings/FINANCIAL_RECORDS.md`
+- Banking Details: `docs/corporate/owlban-group-holdings/BANKING_DETAILS.md`
+- Entity Overview: `docs/corporate/owlban-group-holdings/README.md`
+
 ---
 
 ## 💼 OPERATIONAL ENTITIES
@@ -77,9 +88,26 @@ This document serves as the central registry for all OWLBAN GROUP entities, incl
 - Asset management
 
 **Bank Accounts:**
-- Operating Account: [Bank Name] - Account #[XXXX]
-- Payroll Account: [Bank Name] - Account #[XXXX]
-- Reserve Account: [Bank Name] - Account #[XXXX]
+- Operating Account: Bank of America - Account #237049892660
+- Secondary Account: Fifth Third Bank - Account #7993171904
+
+**Financial Position (As of January 15, 2025):**
+- Member Capital Account: $10,000,000.00
+- Total Assets: $10,000,000.00
+- Total Equity: $10,000,000.00
+- Cash Position: $10,000,000.00
+- Status: Fully Capitalized
+
+**Capital Contributions:**
+- Initial Contribution: [Amount]
+- Additional Contribution (01/15/2025): $10,000,000.00
+- Total Capital Contributed: $10,000,000.00
+
+**Documentation:**
+- Financial Records: `docs/corporate/leepyear-1-llc/FINANCIAL_RECORDS.md`
+- Banking Details: `docs/corporate/leepyear-1-llc/BANKING_DETAILS.md`
+- Operating Agreement: `docs/corporate/leepyear-1-llc/OPERATING_AGREEMENT.md`
+- Entity Overview: `docs/corporate/leepyear-1-llc/README.md`
 
 ---
 
@@ -315,10 +343,16 @@ This document serves as the central registry for all OWLBAN GROUP entities, incl
 - Certified Public Accountant
 - Registered Agent
 
-**Last Updated:** January 2025  
-**Next Review:** [MM/DD/YYYY]  
+**Last Updated:** January 15, 2025  
+**Next Review:** April 15, 2025 (Quarterly)  
 **Maintained By:** Corporate Secretary  
-**Version:** 1.0
+**Version:** 1.1
+
+**Recent Updates:**
+- January 15, 2025: Added financial position data for Holdings Corp and LEEPYEAR 1 LLC
+- January 15, 2025: Recorded $10,000,000.00 capital injection to Holdings Corp
+- January 15, 2025: Recorded $10,000,000.00 capital contribution to LEEPYEAR 1 LLC
+- January 15, 2025: Added documentation references for new financial records
 
 ---
 

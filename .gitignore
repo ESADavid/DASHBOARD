@@ -11,6 +11,13 @@
 secrets/
 credentials/
 
+# Banking and Financial Information
+*BANKING_DETAILS*.md
+*BANKING_INFO*.md
+docs/corporate/*/BANKING_DETAILS.md
+financial-credentials/
+banking/
+
 # Backup files
 *.backup
 *.bak
