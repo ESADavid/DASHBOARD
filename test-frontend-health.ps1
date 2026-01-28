@@ -128,7 +128,6 @@ try {
 Write-Host "Test 7: CORS Configuration..." -NoNewline
 try {
     $response = Invoke-WebRequest -Uri "$backendUrl/api/info" -Method POST -UseBasicParsing
-    $headers = $response.Headers
     
     # Check if CORS headers are present (optional for same-origin)
     Write-Host " PASS" -ForegroundColor Green
