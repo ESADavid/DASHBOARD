@@ -1,8 +1,18 @@
 # 📚 Documentation Index
 
 ## 🏢 Corporate Documentation
-- **[Corporate Overview](corporate/README.md)** - Owlban Group Operation LLC corporate documents
-- **[Articles of Organization](corporate/articles-of-organization.pdf)** - C Corporation formation documents
+
+### OWLBAN GROUP Corporate Structure
+- **[Corporate Overview](corporate/README.md)** - Complete OWLBAN GROUP corporate documentation
+- **[Corporate Structure](corporate/CORPORATE_STRUCTURE.md)** - Visual hierarchy and entity relationships
+- **[Entity Registry](corporate/ENTITY_REGISTRY.md)** - Master list of all entities with EINs and details
+- **[Compliance Calendar](corporate/governance/COMPLIANCE_CALENDAR.md)** - Annual filing and compliance schedule
+
+### Entity Documentation
+- **[LEEPYEAR 1 LLC](corporate/leepyear-1-llc/README.md)** - Operational entity documentation
+- **[C Corp Shell Companies](corporate/c-corp-shells/README.md)** - Shell company structure and documentation
+- **[Trust Accounts](corporate/trusts/README.md)** - Trust structure and estate planning documents
+- **[Articles of Organization](corporate/articles-of-organization.pdf)** - Original formation documents
 
 ## 💻 Development Projects
 
