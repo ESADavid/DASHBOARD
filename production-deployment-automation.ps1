@@ -36,18 +36,18 @@ function Test-Prerequisites {
     # Check Docker
     try {
         docker --version | Out-Null
-        Write-Log "✓ Docker installed" "SUCCESS"
+        Write-Log "Docker installed" "SUCCESS"
     } catch {
-        Write-Log "✗ Docker not found. Please install Docker." "ERROR"
+        Write-Log "Docker not found. Please install Docker." "ERROR"
         return $false
     }
     
     # Check Git
     try {
         git --version | Out-Null
-        Write-Log "✓ Git installed" "SUCCESS"
+        Write-Log "Git installed" "SUCCESS"
     } catch {
-        Write-Log "✗ Git not found. Please install Git." "ERROR"
+        Write-Log "Git not found. Please install Git." "ERROR"
         return $false
     }
     
@@ -55,9 +55,9 @@ function Test-Prerequisites {
     if ($Platform -eq 'all' -or $Platform -eq 'vercel') {
         try {
             node --version | Out-Null
-            Write-Log "✓ Node.js installed" "SUCCESS"
+            Write-Log "Node.js installed" "SUCCESS"
         } catch {
-            Write-Log "⚠ Node.js not found. Vercel deployment will be skipped." "WARN"
+            Write-Log "Node.js not found. Vercel deployment will be skipped." "WARN"
         }
     }
     
@@ -66,7 +66,7 @@ function Test-Prerequisites {
 
 function Run-Tests {
     if ($SkipTests) {
-        Write-Log "Skipping tests (--SkipTests flag set)" "WARN"
+        Write-Log "Skipping tests (SkipTests flag set)" "WARN"
         return $true
     }
     
@@ -74,10 +74,10 @@ function Run-Tests {
     
     try {
         & .\run-complete-test-suite.ps1
-        Write-Log "✓ All tests passed" "SUCCESS"
+        Write-Log "All tests passed" "SUCCESS"
         return $true
     } catch {
-        Write-Log "✗ Tests failed. Deployment aborted." "ERROR"
+        Write-Log "Tests failed. Deployment aborted." "ERROR"
         return $false
     }
 }
@@ -105,10 +105,10 @@ function Deploy-ToDocker {
         docker push owlbandocker/plaid-frontend:latest
         docker push owlbandocker/plaid-backend:latest
         
-        Write-Log "✓ Docker deployment complete" "SUCCESS"
+        Write-Log "Docker deployment complete" "SUCCESS"
         return $true
     } catch {
-        Write-Log "✗ Docker deployment failed: $_" "ERROR"
+        Write-Log "Docker deployment failed: $_" "ERROR"
         return $false
     }
 }
@@ -134,10 +134,10 @@ function Deploy-ToVercel {
         Write-Log "Deploying to Vercel..." "INFO"
         vercel --prod --yes
         
-        Write-Log "✓ Vercel deployment complete" "SUCCESS"
+        Write-Log "Vercel deployment complete" "SUCCESS"
         return $true
     } catch {
-        Write-Log "✗ Vercel deployment failed: $_" "ERROR"
+        Write-Log "Vercel deployment failed: $_" "ERROR"
         return $false
     }
 }
@@ -155,7 +155,7 @@ function Deploy-ToHeroku {
         try {
             heroku --version | Out-Null
         } catch {
-            Write-Log "✗ Heroku CLI not found. Please install it first." "ERROR"
+            Write-Log "Heroku CLI not found. Please install it first." "ERROR"
             return $false
         }
         
@@ -163,10 +163,10 @@ function Deploy-ToHeroku {
         Write-Log "Pushing to Heroku..." "INFO"
         git push heroku main
         
-        Write-Log "✓ Heroku deployment complete" "SUCCESS"
+        Write-Log "Heroku deployment complete" "SUCCESS"
         return $true
     } catch {
-        Write-Log "✗ Heroku deployment failed: $_" "ERROR"
+        Write-Log "Heroku deployment failed: $_" "ERROR"
         return $false
     }
 }
@@ -197,7 +197,7 @@ function Deploy-ToFlyIO {
         try {
             fly version | Out-Null
         } catch {
-            Write-Log "✗ Fly CLI not found. Please install it first." "ERROR"
+            Write-Log "Fly CLI not found. Please install it first." "ERROR"
             return $false
         }
         
@@ -205,10 +205,10 @@ function Deploy-ToFlyIO {
         Write-Log "Deploying to Fly.io..." "INFO"
         fly deploy
         
-        Write-Log "✓ Fly.io deployment complete" "SUCCESS"
+        Write-Log "Fly.io deployment complete" "SUCCESS"
         return $true
     } catch {
-        Write-Log "✗ Fly.io deployment failed: $_" "ERROR"
+        Write-Log "Fly.io deployment failed: $_" "ERROR"
         return $false
     }
 }
@@ -266,7 +266,7 @@ $successCount = 0
 $failCount = 0
 
 foreach ($platform in $deploymentResults.Keys) {
-    $status = if ($deploymentResults[$platform]) { "✓ SUCCESS" } else { "✗ FAILED" }
+    $status = if ($deploymentResults[$platform]) { "SUCCESS" } else { "FAILED" }
     $color = if ($deploymentResults[$platform]) { "Green" } else { "Red" }
     
     Write-Host "$platform : $status" -ForegroundColor $color
@@ -287,9 +287,9 @@ Write-Host "Deployment log saved to: $deploymentLog" -ForegroundColor Cyan
 Write-Host ""
 
 if ($failCount -eq 0) {
-    Write-Log "✓ All deployments completed successfully!" "SUCCESS"
+    Write-Log "All deployments completed successfully!" "SUCCESS"
     exit 0
 } else {
-    Write-Log "⚠ Some deployments failed. Check log for details." "WARN"
+    Write-Log "Some deployments failed. Check log for details." "WARN"
     exit 1
 }

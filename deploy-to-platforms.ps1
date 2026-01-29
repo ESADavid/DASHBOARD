@@ -8,8 +8,8 @@ Write-Host ""
 
 # Configuration
 $DOCKER_IMAGE = "owlbandocker/dashboard:latest"
-$APP_NAME = "dashboard-banking"
-$FLY_REGION = "sea"  # Seattle
+$APP_NAME = "banking-dashboard"
+$FLY_REGION = "iad"  # Ashburn (US East) - matches fly.toml
 
 # Function to check if command exists
 function Test-Command {
@@ -253,5 +253,5 @@ Write-Host "4. Configure monitoring" -ForegroundColor White
 Write-Host ""
 Write-Host "Documentation:" -ForegroundColor Yellow
 Write-Host "   Setup Guide: RENDER_FLYIO_SETUP_GUIDE.md" -ForegroundColor Cyan
-Write-Host "   Action Plan: NEXT_STEPS_ACTION_PLAN.md" -ForegroundColor Cyan
+Write-Host "   Completion Summary: FLY_RENDER_DEPLOYMENT_COMPLETE.md" -ForegroundColor Cyan
 Write-Host ""

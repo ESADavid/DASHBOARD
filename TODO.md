@@ -55,6 +55,8 @@
 - [x] Install Fly.io CLI
 - [x] Create Render.com setup guide (RENDER_FLYIO_SETUP_GUIDE.md)
 - [x] Create interactive deployment script (deploy-to-platforms.ps1)
+- [x] Fix fly.toml configuration (port 80, health check, remove Grafana vars)
+- [x] Fix render.yaml configuration (port 80, health check /health, remove Grafana vars)
 - [ ] Deploy to Render.com (Optional - requires account, see RENDER_FLYIO_SETUP_GUIDE.md)
 - [ ] Deploy to Fly.io (Optional - requires credit card, see RENDER_FLYIO_SETUP_GUIDE.md)
 
