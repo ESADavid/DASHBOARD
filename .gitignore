@@ -44,3 +44,19 @@ out/
 # Cache
 .cache/
 .parcel-cache/
+
+# Docker
+.docker/
+docker-compose.override.yml
+*.dockerignore.bak
+
+# Docker volumes (if using named volumes locally)
+.docker-volumes/
+postgres-data/
+mysql-data/
+redis-data/
+
+# Development artifacts
+*.dev.log
+*.debug.log
+.development/

@@ -1,0 +1,51 @@
+# Docker Compose Production Override
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
+version: '3.8'
+
+services:
+  cloud-platform:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+      args:
+        - BUILD_DATE=${BUILD_DATE:-$(date -u +'%Y-%m-%dT%H:%M:%SZ')}
+        - VCS_REF=${VCS_REF:-$(git rev-parse --short HEAD)}
+    # Production restart policy
+    restart: always
+    # Resource limits for production
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+    # Production environment variables
+    environment:
+      - NODE_ENV=production
+      - DEBUG=false
+    # Production labels
+    labels:
+      - "com.docker.compose.project=dashboard-prod"
+      - "environment=production"
+      - "maintainer=owlban-group"
+    # Security options
+    security_opt:
+      - no-new-privileges:true
+    # Read-only root filesystem for security
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/cache/nginx
+      - /var/run

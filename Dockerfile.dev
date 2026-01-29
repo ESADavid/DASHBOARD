@@ -1,0 +1,81 @@
+# Multi-stage Dockerfile for Development
+# This Dockerfile supports both development and production builds
+
+# Development stage
+FROM nginx:alpine AS development
+
+# Install development tools
+RUN apk add --no-cache \
+    curl \
+    wget \
+    vim \
+    bash \
+    git
+
+# Copy nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy application files
+COPY public /usr/share/nginx/html
+
+# Create directory for live reload
+RUN mkdir -p /usr/share/nginx/html
+
+# Expose port 80
+EXPOSE 80
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD wget --quiet --tries=1 --spider http://localhost/health || exit 1
+
+# Development-specific labels
+LABEL maintainer="owlban-group" \
+      version="dev" \
+      description="Banking Dashboard - Development Build"
+
+# Start nginx in foreground
+CMD ["nginx", "-g", "daemon off;"]
+
+# Production stage (optimized)
+FROM nginx:alpine AS production
+
+# Security: Run as non-root user
+RUN addgroup -g 1001 -S nginx-app && \
+    adduser -S -D -H -u 1001 -h /var/cache/nginx -s /sbin/nologin -G nginx-app -g nginx-app nginx-app
+
+# Copy nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy application files
+COPY public /usr/share/nginx/html
+
+# Set ownership
+RUN chown -R nginx-app:nginx-app /usr/share/nginx/html && \
+    chown -R nginx-app:nginx-app /var/cache/nginx && \
+    chown -R nginx-app:nginx-app /var/log/nginx && \
+    chown -R nginx-app:nginx-app /etc/nginx/conf.d && \
+    touch /var/run/nginx.pid && \
+    chown -R nginx-app:nginx-app /var/run/nginx.pid
+
+# Expose port 80
+EXPOSE 80
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD wget --quiet --tries=1 --spider http://localhost/health || exit 1
+
+# Production labels with build args
+ARG BUILD_DATE
+ARG VCS_REF
+LABEL maintainer="owlban-group" \
+      org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.version="1.0.0" \
+      org.label-schema.description="Banking Dashboard - Production Build" \
+      org.label-schema.schema-version="1.0"
+
+# Switch to non-root user
+USER nginx-app
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]
