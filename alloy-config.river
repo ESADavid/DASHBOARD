@@ -5,8 +5,9 @@ prometheus.remote_write "grafana_cloud" {
   endpoint {
     url = "https://prometheus-prod-XX-prod-us-central-0.grafana.net/api/prom/push"
 
-    headers = {
-      "Authorization" = "Bearer YOUR_GRAFANA_CLOUD_API_KEY",
+    basic_auth {
+      username = "%GRAFANA_CLOUD_USERNAME%"
+      password = "%GRAFANA_CLOUD_PASSWORD%"
     }
   }
 }

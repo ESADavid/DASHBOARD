@@ -1,0 +1,15 @@
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: simple-dashboard
+  labels:
+    app: grafana
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: owlban-group
+  json: >
+    {
+      "title": "as-code dashboard",
+      "uid" : "ascode"
+    }

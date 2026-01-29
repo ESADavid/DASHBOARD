@@ -1,0 +1,20 @@
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-grafana
+spec:
+  package: grafana/crossplane-provider-grafana:v0.1.0
+---
+apiVersion: grafana.jet.crossplane.io/v1alpha1
+kind: Dashboard
+metadata:
+  name: as-code-dashboard
+spec:
+  forProvider:
+    configJson: |
+      {
+        "title": "as-code dashboard",
+        "uid": "ascode"
+      }
+  providerConfigRef:
+    name: grafana-crossplane-provider
