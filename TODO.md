@@ -7,6 +7,7 @@
 - [x] Create alloy-config.river configuration file
 - [x] Create database observability dashboard directory
 - [x] Create database observability dashboard JSON
+- [x] Create config.river for Docker command
 - [ ] Update environment variables for Grafana Cloud
 - [ ] Test the setup and verify metrics collection
 

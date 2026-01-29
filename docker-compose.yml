@@ -1,54 +1,14 @@
 ﻿version: '3.8'
-
 services:
-  grafana:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: banking-grafana
-    ports:
-      - "3000:3000"
-    restart: unless-stopped
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin123
-      - GF_USERS_ALLOW_SIGN_UP=false
-      - GF_INSTALL_PLUGINS=grafana-assistant-app,grafana-dbo11y-app
-      - GF_LOG_LEVEL=info
-      - GF_SERVER_ROOT_URL=http://localhost:3000
-    volumes:
-      - grafana_data:/var/lib/grafana
-      - ./grafana/provisioning:/etc/grafana/provisioning
-      - ./dashboard.json:/var/lib/grafana/dashboards/dashboard.json
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 30s
-    networks:
-      - grafana-network
-    depends_on:
-      - alloy
-
-  alloy:
-    image: grafana/alloy:latest
-    container_name: grafana-alloy
+  grafana-agent:
+    image: grafana/agent:latest
+    container_name: owlban-agent
     restart: unless-stopped
     ports:
       - "12345:12345"
     volumes:
-      - ./alloy-config.river:/etc/alloy/config.river
+      - ./owlban-config.river:/etc/agent/config.river
     command:
-      - "run"
-      - "/etc/alloy/config.river"
-      - "--server.http.listen-addr=0.0.0.0:12345"
-      - "--server.http.ui.enabled=true"
-    networks:
-      - grafana-network
-
-volumes:
-  grafana_data:
-
-networks:
-  grafana-network:
-    driver: bridge
+      - run
+      - --server.http.listen-addr=0.0.0.0:12345
+      - /etc/agent/config.river
