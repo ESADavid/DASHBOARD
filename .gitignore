@@ -4,6 +4,12 @@
 # Production environment files
 .env.production
 
+# GitHub MCP Server - Sensitive files
+.env.mcp
+*github*token*
+*GITHUB*TOKEN*
+github-mcp-server-config.json
+
 # Sensitive files
 *.key
 *.pem
