@@ -34,3 +34,18 @@ try {
 } catch {
     Write-Host "Datasources endpoint failed: $($_.Exception.Message)" -ForegroundColor Red
 }
+
+# Test dashboard endpoint
+Write-Host "Testing dashboard endpoint..." -ForegroundColor Yellow
+try {
+    $bearerToken = "eyJrIjoiT0tTcG1pUlY2RnVKZTFVaDFsNFZXdE9ZWmNrMkZYbk"
+    $dashboardHeaders = @{
+        "Authorization" = "Bearer $bearerToken"
+        "Accept" = "application/json"
+    }
+    $response = Invoke-WebRequest -Uri "$baseUrl/api/dashboards/db/mydash" -Method GET -Headers $dashboardHeaders
+    Write-Host "Dashboard endpoint: $($response.StatusCode)" -ForegroundColor Green
+    Write-Host "Response: $($response.Content)" -ForegroundColor Cyan
+} catch {
+    Write-Host "Dashboard endpoint failed: $($_.Exception.Message)" -ForegroundColor Red
+}

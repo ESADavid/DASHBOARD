@@ -1,13 +1,13 @@
 {
   "dashboard": {
     "id": null,
-    "uid": "banking-dashboard",
-    "title": "Banking Operations Dashboard",
-    "tags": ["banking", "transactions", "ledger", "payroll"],
+    "uid": "grafana-ml-app-home",
+    "title": "AI & Machine Learning Dashboard",
+    "tags": ["ai", "ml", "machine-learning", "grafana-ml-app"],
     "timezone": "browser",
     "schemaVersion": 16,
     "version": 0,
-    "refresh": "5s",
+    "refresh": "30s",
     "panels": [
       {
         "id": 1,
@@ -18,11 +18,11 @@
           "y": 0
         },
         "type": "graph",
-        "title": "Transaction Volume",
+        "title": "ML Model Predictions",
         "targets": [
           {
             "refId": "A",
-            "target": "transactions.count"
+            "target": "ml_model_predictions"
           }
         ],
         "xaxis": {
@@ -31,8 +31,9 @@
         },
         "yaxes": [
           {
-            "label": "Transactions",
-            "show": true
+            "label": "Prediction Value",
+            "show": true,
+            "format": "none"
           },
           {
             "show": true
@@ -47,26 +48,28 @@
           "x": 12,
           "y": 0
         },
-        "type": "stat",
-        "title": "Total Balance",
+        "type": "graph",
+        "title": "Anomaly Detection Scores",
         "targets": [
           {
             "refId": "A",
-            "target": "ledger.balance"
+            "target": "anomaly_detection_scores"
           }
         ],
-        "options": {
-          "graphMode": "area",
-          "colorMode": "value",
-          "justifyMode": "auto",
-          "textMode": "auto"
+        "xaxis": {
+          "show": true,
+          "mode": "time"
         },
-        "fieldConfig": {
-          "defaults": {
-            "unit": "currencyUSD",
-            "decimals": 2
+        "yaxes": [
+          {
+            "label": "Anomaly Score",
+            "show": true,
+            "format": "none"
+          },
+          {
+            "show": true
           }
-        }
+        ]
       },
       {
         "id": 3,
@@ -76,12 +79,272 @@
           "x": 0,
           "y": 8
         },
-        "type": "table",
-        "title": "Recent Transactions",
+        "type": "graph",
+        "title": "Outlier Detection",
         "targets": [
           {
             "refId": "A",
-            "target": "transactions.recent"
+            "target": "outlier_detection_count"
+          }
+        ],
+        "xaxis": {
+          "show": true,
+          "mode": "time"
+        },
+        "yaxes": [
+          {
+            "label": "Outliers",
+            "show": true
+          },
+          {
+            "show": true
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 8
+        },
+        "type": "graph",
+        "title": "Adaptive Telemetry Optimization",
+        "targets": [
+          {
+            "refId": "A",
+            "target": "adaptive_telemetry_optimization"
+          }
+        ],
+        "xaxis": {
+          "show": true,
+          "mode": "time"
+        },
+        "yaxes": [
+          {
+            "label": "Optimization Score",
+            "show": true,
+            "format": "percent"
+          },
+          {
+            "show": true
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 16
+        },
+        "type": "graph",
+        "title": "SLO Monitoring Probabilities",
+        "targets": [
+          {
+            "refId": "A",
+            "target": "slo_monitoring_probabilities"
+          }
+        ],
+        "xaxis": {
+          "show": true,
+          "mode": "time"
+        },
+        "yaxes": [
+          {
+            "label": "Probability",
+            "show": true,
+            "format": "percent"
+          },
+          {
+            "show": true
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 16
+        },
+        "type": "graph",
+        "title": "Traces - Request Count",
+        "targets": [
+          {
+            "refId": "A",
+            "target": "trace_request_count"
+          }
+        ],
+        "xaxis": {
+          "show": true,
+          "mode": "time"
+        },
+        "yaxes": [
+          {
+            "label": "Requests",
+            "show": true
+          },
+          {
+            "show": true
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 0,
+          "y": 24
+        },
+        "type": "stat",
+        "title": "AI Observability - LLM Performance",
+        "targets": [
+          {
+            "refId": "A",
+            "target": "llm_performance_score"
+          }
+        ],
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "color": {
+              "mode": "thresholds"
+            },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "value": null,
+                  "color": "red"
+                },
+                {
+                  "value": 95,
+                  "color": "orange"
+                },
+                {
+                  "value": 99,
+                  "color": "green"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 8,
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 8,
+          "y": 24
+        },
+        "type": "stat",
+        "title": "AI Observability - GPU Monitoring",
+        "targets": [
+          {
+            "refId": "A",
+            "target": "gpu_monitoring_score"
+          }
+        ],
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "color": {
+              "mode": "thresholds"
+            },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "value": null,
+                  "color": "red"
+                },
+                {
+                  "value": 95,
+                  "color": "orange"
+                },
+                {
+                  "value": 99,
+                  "color": "green"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 9,
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 16,
+          "y": 24
+        },
+        "type": "stat",
+        "title": "Dashboard Assistant Suggestions",
+        "targets": [
+          {
+            "refId": "A",
+            "target": "dashboard_assistant_suggestions_count"
+          }
+        ],
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "color": {
+              "mode": "thresholds"
+            },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "value": null,
+                  "color": "red"
+                },
+                {
+                  "value": 95,
+                  "color": "orange"
+                },
+                {
+                  "value": 99,
+                  "color": "green"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 10,
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 32
+        },
+        "type": "table",
+        "title": "Recent Log Entries",
+        "targets": [
+          {
+            "refId": "A",
+            "target": "logs_recent"
           }
         ],
         "options": {
@@ -97,157 +360,47 @@
         }
       },
       {
-        "id": 4,
+        "id": 11,
         "gridPos": {
           "h": 8,
           "w": 12,
           "x": 12,
-          "y": 8
+          "y": 32
         },
-        "type": "piechart",
-        "title": "Transaction Types",
+        "type": "table",
+        "title": "Recent Traces",
         "targets": [
           {
             "refId": "A",
-            "target": "transactions.by_type"
+            "target": "traces_recent"
           }
         ],
         "options": {
-          "legend": {
-            "displayMode": "list",
-            "placement": "bottom"
-          },
-          "pieType": "pie"
-        }
-      },
-      {
-        "id": 5,
-        "gridPos": {
-          "h": 8,
-          "w": 8,
-          "x": 0,
-          "y": 16
-        },
-        "type": "stat",
-        "title": "Debit Total",
-        "targets": [
-          {
-            "refId": "A",
-            "target": "ledger.debit_total"
-          }
-        ],
-        "options": {
-          "colorMode": "value",
-          "graphMode": "area"
+          "showHeader": true
         },
         "fieldConfig": {
           "defaults": {
-            "unit": "currencyUSD",
-            "color": {
-              "mode": "thresholds"
-            },
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "value": null,
-                  "color": "red"
-                }
-              ]
+            "custom": {
+              "align": "auto",
+              "displayMode": "auto"
             }
           }
         }
       },
       {
-        "id": 6,
-        "gridPos": {
-          "h": 8,
-          "w": 8,
-          "x": 8,
-          "y": 16
-        },
-        "type": "stat",
-        "title": "Credit Total",
-        "targets": [
-          {
-            "refId": "A",
-            "target": "ledger.credit_total"
-          }
-        ],
-        "options": {
-          "colorMode": "value",
-          "graphMode": "area"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "unit": "currencyUSD",
-            "color": {
-              "mode": "thresholds"
-            },
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "value": null,
-                  "color": "green"
-                }
-              ]
-            }
-          }
-        }
-      },
-      {
-        "id": 7,
-        "gridPos": {
-          "h": 8,
-          "w": 8,
-          "x": 16,
-          "y": 16
-        },
-        "type": "stat",
-        "title": "Payroll Processed",
-        "targets": [
-          {
-            "refId": "A",
-            "target": "payroll.total"
-          }
-        ],
-        "options": {
-          "colorMode": "value",
-          "graphMode": "area"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "unit": "currencyUSD",
-            "color": {
-              "mode": "thresholds"
-            },
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "value": null,
-                  "color": "blue"
-                }
-              ]
-            }
-          }
-        }
-      },
-      {
-        "id": 8,
+        "id": 12,
         "gridPos": {
           "h": 8,
           "w": 24,
           "x": 0,
-          "y": 24
+          "y": 40
         },
         "type": "graph",
-        "title": "Assets Over Time",
+        "title": "OpenTelemetry Metrics",
         "targets": [
           {
             "refId": "A",
-            "target": "assets.total"
+            "target": "otel_metrics"
           }
         ],
         "xaxis": {
@@ -256,23 +409,17 @@
         },
         "yaxes": [
           {
-            "label": "Assets (USD)",
-            "show": true,
-            "format": "currencyUSD"
+            "label": "Value",
+            "show": true
           },
           {
             "show": true
           }
-        ],
-        "lines": true,
-        "fill": 1,
-        "linewidth": 2,
-        "points": false,
-        "pointradius": 2
+        ]
       }
     ],
     "time": {
-      "from": "now-6h",
+      "from": "now-1h",
       "to": "now"
     },
     "timepicker": {
