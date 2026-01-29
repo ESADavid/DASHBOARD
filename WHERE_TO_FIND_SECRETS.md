@@ -205,7 +205,7 @@ HEROKU_API_KEY=xxxxxxxxxxxxxxxxxxxxx
 ### HEROKU_APP_NAME
 **Location:** This is your Heroku app name
 
-**Value:** 
+**Value:**
 ```
 HEROKU_APP_NAME=esaowl
 ```
@@ -218,6 +218,64 @@ HEROKU_APP_NAME=esaowl
 **Value:** The email you use to log into Heroku
 ```
 HEROKU_EMAIL=your-email@example.com
+```
+
+---
+
+## 📊 Grafana Cloud Secrets
+
+### GRAFANA_CLOUD_USERNAME
+**Location:** Your Grafana Cloud user ID (numeric)
+
+**How to find it:**
+1. Go to https://grafana.com/auth/sign-in
+2. Sign in to your Grafana Cloud account
+3. Navigate to: ☰ menu → Connections → Data sources
+4. Click on "grafanacloud-financestack2-prom"
+5. Scroll down to see your User ID (numeric value)
+
+**Format:** Numeric string (e.g., 123456)
+```
+GRAFANA_CLOUD_USERNAME=123456
+```
+
+---
+
+### GRAFANA_CLOUD_PASSWORD
+**Location:** Grafana Cloud API Key with metrics:write scope
+
+**How to find it:**
+1. In your Grafana Cloud instance, click ☰ menu (top left)
+2. Go to Administration → Cloud Access Policies
+3. Click "Create access policy" or use existing one
+4. Create a token with metrics:write scope
+5. Copy the token (starts with `glc_`)
+
+**Alternative method:**
+1. Go to ☰ menu → Connections → Add new connection
+2. Search for "Hosted Prometheus metrics"
+3. Click "Add new data source"
+4. The code snippet will show your credentials
+
+**Format:** Starts with `glc_`
+```
+GRAFANA_CLOUD_PASSWORD=glc_xxxxxxxxxxxxxxxxxxxxx
+```
+
+---
+
+### GRAFANA_CLOUD_URL
+**Location:** Your Prometheus remote write URL
+
+**How to find it:**
+1. Go to ☰ menu → Connections → Data sources
+2. Click on "grafanacloud-financestack2-prom"
+3. Look for the URL field
+4. It will be something like: `https://prometheus-prod-XX-XXX.grafana.net/api/prom/push`
+
+**Format:** `https://prometheus-prod-XX-XXX.grafana.net/api/prom/push`
+```
+GRAFANA_CLOUD_URL=https://prometheus-prod-XX-XXX.grafana.net/api/prom/push
 ```
 
 ---

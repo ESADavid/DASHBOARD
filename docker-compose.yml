@@ -1,5 +1,4 @@
-﻿version: '3.8'
-services:
+﻿services:
   grafana-agent:
     image: grafana/agent:latest
     container_name: owlban-agent

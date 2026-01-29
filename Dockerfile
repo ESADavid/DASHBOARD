@@ -4,6 +4,7 @@ FROM grafana/grafana:latest
 ENV GF_SECURITY_ADMIN_PASSWORD=admin123
 ENV GF_USERS_ALLOW_SIGN_UP=false
 ENV GF_INSTALL_PLUGINS=grafana-assistant-app,grafana-database-observability-app
+ENV GF_METRICS_ENABLED=true
 
 # Create directories for provisioning
 RUN mkdir -p /etc/grafana/provisioning/datasources \
