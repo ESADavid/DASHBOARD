@@ -6,7 +6,36 @@ This Grafana-based banking dashboard can be deployed to multiple platforms. Foll
 
 ## 🚀 Platform Deployment Options
 
-### 1. **Heroku Deployment** (Container-based)
+### **Quick Start - Run All Tests First**
+Before deploying, run the comprehensive test suite:
+```powershell
+# Run all deployment tests
+.\run-all-deploy-tests.ps1
+
+# Install required tools if needed
+.\install-tools.ps1
+```
+
+### 1. **Local Docker Deployment** (Recommended for Testing)
+
+#### Quick Deploy:
+```powershell
+# Deploy locally with Docker
+.\deploy-docker.ps1
+```
+This will:
+- Build the Docker image
+- Start Grafana on http://localhost:3000
+- Username: admin, Password: admin
+
+#### Manual Docker Steps:
+```bash
+# Build and run
+docker build -t owlbandocker/dashboard:latest .
+docker run -d -p 3000:3000 -e GF_SECURITY_ADMIN_PASSWORD=admin owlbandocker/dashboard:latest
+```
+
+### 2. **Heroku Deployment** (Container-based)
 
 #### Prerequisites:
 - Heroku account verified with payment information

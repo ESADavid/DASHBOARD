@@ -1,7 +1,7 @@
 FROM grafana/grafana:latest
 
 # Set environment variables for Grafana
-ENV GF_SECURITY_ADMIN_PASSWORD=admin123
+ENV GF_SECURITY_ADMIN_PASSWORD=admin
 ENV GF_USERS_ALLOW_SIGN_UP=false
 ENV GF_INSTALL_PLUGINS=grafana-assistant-app,grafana-database-observability-app
 ENV GF_METRICS_ENABLED=true
